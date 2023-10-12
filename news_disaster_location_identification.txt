@@ -1,0 +1,31 @@
+#Downlad the standford-ner from https://nlp.stanford.edu/software/stanford-ner-4.2.0.zip  
+#Unzip it
+import nltk
+nltk.download('punkt')
+
+from nltk.tag import StanfordNERTagger
+from nltk.tokenize import word_tokenize
+import os
+
+java_path = "C:/Program Files/Java/jre1.8.0_331/bin/java.exe"
+os.environ['JAVAHOME'] = java_path
+class_path = "C:/Users/mthgh/Downloads/stanford-ner-4.2.0/stanford-ner-2020-11-17/stanford-ner.jar"
+os.environ['CLASSPATH'] = class_path
+
+model = 'C:/Users/mthgh/Downloads/stanford-ner-4.2.0/stanford-ner-2020-11-17/classifiers/english.all.3class.distsim.crf.ser.gz'
+
+					   
+text = 'While in France, Christine Lagarde discussed short-term stimulus efforts in a recent interview with the Wall Street Journal.'
+
+st = StanfordNERTagger(model,class_path,encoding='utf-8')
+tokenized_text = word_tokenize(text)
+classified_text = st.tag(tokenized_text)
+
+
+try:
+   classified_text = st.tag(tokenized_text)
+except Exception:
+   pass
+
+print(classified_text)
+# Identify the location 'France'
