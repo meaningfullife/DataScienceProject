@@ -1,3 +1,4 @@
+#reference:https://nlp.stanford.edu/software/CRF-NER.html
 #Downlad the standford-ner from https://nlp.stanford.edu/software/stanford-ner-4.2.0.zip  
 #Unzip it
 import nltk
