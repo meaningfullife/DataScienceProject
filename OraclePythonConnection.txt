@@ -1,0 +1,40 @@
+import pandas as pd
+import sqlalchemy
+import keyring
+import os
+def format_tns_con_str(username, password, database, port=""):
+
+    if len(port) > 0:
+        port_str = ":{}".format(port)
+    else:
+        port_str = ""
+    return ("oracle://{0}:{1}@{2}{3}".format(username,
+                                             password,
+                                             database, port_str)
+            )
+            
+def oracle_connection_string(username, password, database, driver="", type="TNS", **kwargs):
+
+    if type == "TNS":
+        return (format_tns_con_str(username, password, database, **kwargs))
+    else:
+        return (format_generic_con_str(username, password, database, **kwargs))
+
+datalake = "PRDLKDB"
+datalake_user = "XUES[SBOX1]"
+password = keyring.get_password("skye","oracle")
+datalake_engine = sqlalchemy.create_engine(oracle_connection_string(datalake_user, password, datalake),
+                                           execution_options=dict(stream_results=True))
+
+os.chdir("S:\Transfer\ASKYE\mental_health")
+
+df1 = pd.read_sql("select ccla_id,\
+       communication_date, \
+       communication_dir_dscr as type,\
+       communication_with as category,\
+       document_name,\
+       co_respondent_name as contact_name,\
+       details_text as details \
+       from cl_communication_v@car_ve \
+       where ccla_id in (select stat_ccla_id from non_mental1) and details_text is not null", 
+      datalake_engine)
